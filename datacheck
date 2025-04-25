@@ -1,0 +1,206 @@
+CREATE TYPE employee_type AS ENUM ('freelancer', 'employee', 'intern');
+CREATE TYPE employee_status AS ENUM ('Not an employee', 'active', 'deleted');
+CREATE TYPE asset_type AS ENUM ('laptop','mouse','pendrive','harddisk','monitor','mobile','sim','accessories');
+CREATE TYPE asset_status AS ENUM ('assign', 'available', 'deleted','service');
+CREATE TYPE accessories_type AS ENUM ('cable', 'ram', 'other','keyboard');
+
+CREATE TABLE IF NOT EXISTS public.admin (
+    	id uuid NOT NULL DEFAULT gen_random_uuid(),
+    	email text NOT NULL,
+    	created_at timestamp with time zone DEFAULT now(),
+    	created_by uuid,
+		archived_at timestamp with time zone,
+		archived_by uuid,
+    	CONSTRAINT admin_pkey PRIMARY KEY(id),
+		CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES public.admin(id),
+		CONSTRAINT fk_archived_by FOREIGN KEY (archived_by) REFERENCES public.admin(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS public.assets
+(
+    brand text   NOT NULL,
+    model text  ,
+    serial_no text  ,
+    
+	type asset_type NOT NULL,
+    status asset_status NOT NULL,
+    
+	asset_type_id uuid NOT NULL DEFAULT gen_random_uuid(),
+    purchase_date time with time zone NOT NULL,
+    warranty_expire_date timestamp with time zone,
+    owned_by text   NOT NULL,
+	
+	created_by uuid ,
+	create_at TIMESTAMP with time zone not null,	
+	
+	updated_by uuid,
+	updated_at TIMESTAMP with time zone ,
+	
+	archived_by uuid,
+	archived_at TIMESTAMP with time zone,
+	archive_reason text,
+
+ CONSTRAINT assets_pkey PRIMARY KEY (asset_type_id),
+	CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES public.admin(id),
+	CONSTRAINT fk_updated_by FOREIGN KEY (updated_by) REFERENCES public.admin(id),
+	constraint fk_archived_by FOREIGN key (archived_by) REFERENCES public.admin(id)	
+);
+
+
+CREATE TABLE IF NOT EXISTS public.employee
+(
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    name text   NOT NULL,
+    email text   NOT NULL,
+	
+    phone integer NOT NULL,
+    type employee_type   NOT NULL,
+    status employee_status   NOT NULL,
+
+	created_by uuid ,
+	create_at TIMESTAMP with time zone not null,	
+	
+	updated_by uuid,
+	updated_at TIMESTAMP with time zone ,
+	
+	archived_by uuid,
+	archived_at TIMESTAMP with time zone,
+	archive_reason text,
+	
+    CONSTRAINT "employee_PK" PRIMARY KEY (id),
+	CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES public.admin(id),
+	CONSTRAINT fk_updated_by FOREIGN KEY (updated_by) REFERENCES public.admin(id),
+	constraint fk_archived_by FOREIGN key (archived_by) REFERENCES public.admin(id)	
+);
+
+CREATE table assigned_assets(
+    asset_id uuid NOT NULL,
+   	emp_id uuid NOT NULL,
+    assigned_date timestamp with time zone NOT NULL,
+    assigned_by uuid ,
+	revoke_date timestamp with time zone,
+	revoke_reason text,
+	revoked_by uuid,
+	CONSTRAINT fk_asset_id FOREIGN KEY (asset_id) REFERENCES public.assets(asset_type_id),
+	CONSTRAINT fk_revoked_by FOREIGN KEY (revoked_by) REFERENCES public.admin(id),
+	CONSTRAINT fk_assigned_by FOREIGN KEY(assigned_by) REFERENCES public.admin(id)
+);
+
+ALTER TABLE IF EXISTS public.assigned_assets
+    ADD CONSTRAINT fk_emp_id FOREIGN KEY (emp_id) REFERENCES public.employee(id);
+
+CREATE TABLE IF NOT EXISTS public.service
+(
+    asset_id uuid NOT NULL,
+    reason text   NOT NULL,
+    sent_date timestamp with time zone NOT NULL,
+  	sent_by uuid,
+  	received_date timestamp with time zone,
+	price INTEGER,
+	recived_remark text, 
+	recived_by uuid,
+	CONSTRAINT fk_sent_by FOREIGN KEY (sent_by) REFERENCES public.admin(id),
+	CONSTRAINT fk_recived_by FOREIGN KEY (recived_by) REFERENCES public.admin(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.session
+(
+  	id uuid NOT NULL DEFAULT gen_random_uuid(),
+    admin_id uuid NOT NULL,
+    session_token text   NOT NULL,
+  	start_time timestamp with time zone NOT NULL DEFAULT NOW(),
+  	expire_time timestamp with time zone DEFAULT NOW() + INTERVAL '30 days',
+    CONSTRAINT session_pkey PRIMARY KEY (id),
+		CONSTRAINT fk_admin_id FOREIGN KEY (admin_id) REFERENCES public.admin(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.accesories
+(
+    id uuid NOT NULL,
+    type text   NOT NULL,
+    capacity text  ,
+    remark text ,
+	CONSTRAINT accesories_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.sim
+(
+    id uuid NOT NULL,
+    phone integer NOT NULL,
+    sim_no integer NOT NULL,
+CONSTRAINT sim_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+
+);
+
+
+CREATE TABLE IF NOT EXISTS public.harddrive
+(
+    id uuid NOT NULL,
+    storage text   NOT NULL,
+	CONSTRAINT harddrive_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.laptop
+(
+    id uuid NOT NULL,
+    series text   NOT NULL,
+    ram text   NOT NULL,
+    operating_system text   NOT NULL,
+    screen_resolution text   NOT NULL,
+    storage text   NOT NULL,
+	CONSTRAINT laptop_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.mobile
+(
+    id uuid NOT NULL,
+    os_type text   NOT NULL,
+    imei_1 text   NOT NULL,
+    imei_2 text   ,
+    ram text   NOT NULL,
+	CONSTRAINT mobile_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.monitor
+(
+    id uuid NOT NULL,
+    screen_resolution text   NOT NULL,
+	CONSTRAINT monitor_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS public.pendrive
+(
+    id uuid NOT NULL,
+    storage text   NOT NULL,
+	CONSTRAINT pendrive_id_fkey FOREIGN KEY (id)REFERENCES public.assets (asset_type_id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
