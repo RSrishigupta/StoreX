@@ -1,34 +1,40 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import './globals.css';
-import { auth, signOut } from '../auth';
+// import {signOut } from '../auth';
+import { auth } from '../auth';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
+// import { redirect } from 'next/navigation';
 export default async function Home() {
   const session = await auth();
-  if (!session) return redirect('/login');
-  const userEmail = session?.user?.email;
-  console.log("SESSION --------------------->", session);
+  // if (!session) return redirect('/login');
+  // const userEmail = session?.user?.email;
+  // console.log("SESSION --------------------->", session);
   // console.log("token --------------------->", token);
   return (
     <Box>
-      <Typography variant="h5" color="initial">
-        Welcome to the page, {userEmail}
-        <Button
-          variant="contained"
-          onClick={async () => {
-            "use server";
-            await signOut();
-          }}
-          sx={{
-            backgroundColor: "#d32f2f",
-            color: "#fff",
-            "&:hover": {
-              backgroundColor: "#b71c1c",
-            },
-          }}
-        >
-          Sign Out
-        </Button>
-      </Typography>
+      {!session && (
+        <div>
+          <p>NOT AUTHENTICATED. Please login.</p>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#1976d2",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#115293",
+              },
+            }}
+          >
+            <Link href='/login'>
+              Go to Login
+            </Link>
+          </Button>
+        </div>
+      )}
+      {session && (redirect('/dashboard')
+      )}
+      
     </Box>
   );
 }
