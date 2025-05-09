@@ -25,7 +25,7 @@ export const PATCH = auth(async function PATCH(req, { params }) {
              RETURNING *`,
             [name, email, phone, type, status, req.auth.user?.id, param.id]
         );
-        return NextResponse.json({ note: result.rows[0] }, { status: 201 });
+        return NextResponse.json({ Employee: result.rows[0] }, { status: 200 });
 
     } catch (err) {
         console.error('Error adding admin:', err);
