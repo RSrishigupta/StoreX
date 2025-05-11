@@ -8,12 +8,28 @@ export const POST = auth(async function POST(req) {
         return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     }
     const { assetId, empId, assignedDate } = await req.json();
+    if (!assetId || !empId || !assignedDate) {
+        return NextResponse.json({ error: 'INSUFFICIENT DATA' }, { status: 400 });
+    }
     console.log("asset id", assetId);
     console.log("assigned date", assignedDate);
     console.log("emp id", empId);
     try {
+        //pahle se assigned to nhi hai asset
+        const checkAssigned = await pool.query(
+            `select count(*)> 0 as exist from assets where asset_type_id = $1 and status = 'assign'`, [assetId])
+        if (checkAssigned.rows[0].exist) {
+            return NextResponse.json({ error: 'Asset is already assigned' }, { status: 400 });
+        }
+        //assigned hone ke baad asset ki status change ho jani chahiye
+        await pool.query(
+            `UPDATE public.assets SET status = 'assign' WHERE asset_type_id = $1`, [assetId]);
+
         const result = await pool.query(
-            `INSERT INTO public.assigned_assets (asset_id,emp_id,assigned_date,assigned_by)VALUES($1,$2,$3,$4) RETURNING *`,
+            `INSERT INTO public.assigned_assets 
+                (asset_id,emp_id,assigned_date,assigned_by)
+                 VALUES($1,$2,$3,$4) 
+                    RETURNING *`,
             [assetId, empId, assignedDate, req.auth.user?.id]);
         return NextResponse.json({ Employee: result.rows[0] }, { status: 201 });
 
@@ -23,36 +39,4 @@ export const POST = auth(async function POST(req) {
     }
 })
 
-
-
-// how will a person identify which data to be retrived
-// jis asset ko retrve karna h usko id aur jisko diye h uska id dono chhaiye
-
-// export const PATCH = auth(async function PATCH(req, { params }) {
-//     const { assetId, empId, retriveDate, reason } = await params;
-//     const { id } = await params;
-//     if (!req.auth) {
-//         return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-//     }
-//     if (!retriveDate || !reason || !assetId || !empId) {
-//         return NextResponse.json({ error: 'INSUFFICIENT DATA' }, { status: 400 });
-//     }
-//     try {
-//         const result = await pool.query(
-//             `UPDATE public.assigned_assets 
-//              SET 
-//              retrive_date= $1,
-//              retrive_reason = $2,
-//              retrive_by =$3     
-//              WHERE id = $4,
-//              RETURNING *`,
-//             [retriveDate, reason, req.auth.user?.id, id]
-//         );
-//         return NextResponse.json({ Employee: result.rows[0] }, { status: 200 });
-
-//     } catch (err) {
-//         console.error('Error retriving the asset:', err);
-//         return NextResponse.json({ error: 'Failed to retrive the asset' }, { status: 500 });
-//     }
-// })
 

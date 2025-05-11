@@ -8,7 +8,7 @@ export const GET = auth(async function GET(req) {
   if (!req.auth) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
   }
-  console.log("the id of hte active session ",req.auth.user?.id);
+  console.log("the id of the active session ",req.auth.user?.id);
   
   const users = await getAdmins();
   return NextResponse.json({ users });

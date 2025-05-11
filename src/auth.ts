@@ -1,7 +1,7 @@
 // auth.ts
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import MyAdapter from "@/lib/myAdapter"; // Import your custom adapter
+import MyAdapter from "@/lib/myAdapter"; 
 import pool from "@/lib/db";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MyAdapter(pool),

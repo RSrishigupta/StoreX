@@ -23,7 +23,7 @@ export const POST = auth(async function POST(req) {
             [name, email, phone, type, status, req.auth.user?.id]
         );
 
-        return NextResponse.json({ note: result.rows[0] }, { status: 201 });
+        return NextResponse.json({ employee: result.rows[0] }, { status: 201 });
 
     } catch (err) {
         console.error('Error adding admin:', err);
@@ -38,7 +38,11 @@ export const POST = auth(async function POST(req) {
 //     const Employee = await pool.query(`SELECT * FROM EMPLOYEE`,);
 //     return NextResponse.json({ employees: Employee.rows });
 // })
-export async function GET() {
+export const GET = auth(async function GET(req) {
+    if (!req.auth) {
+        return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    }
+
     try {
         // Query to fetch all employee data along with their assigned assets
         const { rows } = await pool.query(`
@@ -104,3 +108,4 @@ export async function GET() {
         return NextResponse.json({ error: "Failed to fetch employee data" }, { status: 500 });
     }
 }
+)
