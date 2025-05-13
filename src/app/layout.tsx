@@ -1,15 +1,25 @@
-"use client";
+'use client';
+
 import { useState } from "react";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+import { SessionProvider } from "next-auth/react"; 
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [queryClient] = useState(() => new QueryClient());
+
   return (
     <html lang="en">
       <body>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <SessionProvider>
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

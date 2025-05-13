@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
-import loginImage from "../../assets/login-cover.svg";
+import loginImage from "../../images/login-cover.svg";
 import { signIn } from "../../auth"
 import { Button } from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';

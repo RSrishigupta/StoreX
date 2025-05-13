@@ -1,10 +1,9 @@
-import SidebarWrapper from "@/Component/Sidebar/SidebarWrapper";
-
+import Sidebar from "@/Component/Sidebar/Sidebar";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex' }}>
-      <SidebarWrapper />
-      <main style={{ flexGrow: 1, padding: 24 }}>{children}</main>
+      <Sidebar />
+      <main style={{ flexGrow: 1}}>{children}</main>
     </div>
   );
 }

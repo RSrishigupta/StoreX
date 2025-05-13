@@ -1,15 +1,16 @@
-import { auth } from '@/auth'
-import SidebarWrapper from '@/Component/Sidebar/SidebarWrapper'
-import React from 'react'
-const page = async () => {
-  const session = await auth()
-  if (!session) return <div>Not authenticated</div>
-  // console.log(session);
-  return (
+'use client';
+import Sidebar from '@/Component/Sidebar/Sidebar';
+import { useSession } from 'next-auth/react';
+
+const UserAvatar = () => {
+  const { data: session } = useSession();
+
+  return  (
     <div>
-      <SidebarWrapper />
-      new route only  accesbile in the middleware
+        {session?.user?.name || 'Guest'}
+        <Sidebar/>
     </div>
-  )
-}
-export default page
+  ) 
+};
+
+export default UserAvatar;

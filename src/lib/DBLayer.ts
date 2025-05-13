@@ -1,10 +1,7 @@
 // lib/DBLayer.ts
 import pool from '@/lib/db';
 
-//
 // ─── ADMIN SECTION ─────────────────────────────────────────────────────────────
-//
-
 export async function getAdmins() {
   const result = await pool.query(
     'SELECT * FROM admin WHERE archived_at IS NULL ORDER BY created_by'
@@ -28,21 +25,41 @@ export async function createAdmin(email: string, created_by: string | undefined)
   return result.rows[0];
 }
 
+// export async function archiveAdmin(id: string, admin_id: string | undefined) {
+//   const result = await pool.query(
+//     `UPDATE admin SET archived_at = now(), archived_by = $1 WHERE id = $2;
+//      DELETE FROM sessions
+//      USING admin a
+//      JOIN users u ON a.email = u.email
+//      WHERE a.archived_at IS NOT NULL AND u.id = sessions."user_id";`,
+//     [admin_id, id]
+//   );
+//   return result.rows;
+// }
+
+
 export async function archiveAdmin(id: string, admin_id: string | undefined) {
-  const result = await pool.query(
-    `UPDATE admin SET archived_at = now(), archived_by = $1 WHERE id = $2;
-     DELETE FROM sessions
-     USING admin a
-     JOIN users u ON a.email = u.email
-     WHERE a.archived_at IS NOT NULL AND u.id = sessions."userId";`,
+  // First: Archive the admin
+  await pool.query(
+    `UPDATE admin SET archived_at = now(), archived_by = $1 WHERE id = $2`,
     [admin_id, id]
   );
-  return result.rows;
+
+  // Second: Delete sessions for the archived admin
+  await pool.query(
+    `
+    DELETE FROM sessions
+    USING admin a
+    JOIN users u ON a.email = u.email
+    WHERE a.archived_at IS NOT NULL AND u.id = sessions."user_id"
+    `
+  );
+
+  return { success: true };
 }
 
-//
+
 // ─── ASSET SECTION ─────────────────────────────────────────────────────────────
-//
 
 export async function insertAsset(data: {
   brand: string;

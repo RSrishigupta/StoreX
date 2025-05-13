@@ -1,11 +1,30 @@
+import axios from 'axios';
+const baseURL = 'http://localhost:3000/api'
+
 export async function fetchAdmins() {
-    try {
-      const response = await fetch('http://localhost:3000/api/admin'); // Adjust the API route if necessary
-      if (!response.ok) throw new Error('Failed to fetch admin data');
-      const data = await response.json();
-      return data.ADMIN; // Return the admin array
-    } catch (err) {
-      console.error('Error fetching admin data:', err);
-      return [];
-    }
+  try {
+    const response = await axios.get(`${baseURL}/admin`);
+    return response.data.users;
+  } catch (error) {
+    console.error('Error fetching admin data:', error);
+    throw new Error('Failed to fetch admin data');
   }
+}
+
+
+
+export const fetchDashboardData = async (status: string) => {
+  const response = await axios.get(`${baseURL}/dashboard?status=${status}`);
+  return response.data;
+};
+
+
+export const addAdmin = async (email: string) => {
+  const response = await axios.post(`${baseURL}/admin`, { email });
+  return response.data;
+};
+
+export const deleteAdmin = async (id: string) => {
+  const res = await axios.delete(`${baseURL}/admin/${id}`);
+  return res.data;
+};

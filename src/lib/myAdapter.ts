@@ -9,6 +9,7 @@ export default function MyAdapter(pool: Pool): Adapter {
           RETURNING *`,
         [user.name, user.email, user.emailVerified, user.image]
       );
+      
       return result.rows[0];
     },
 

@@ -1,23 +1,33 @@
 'use client';
-import logo from "@/assets/logo.svg"
+import { useState } from 'react';
+import logo from "@/images/logo.svg";
 import { ExpandMore } from '@mui/icons-material';
-import { Box, Drawer, Typography, Divider, Avatar, ButtonBase} from '@mui/material';
+import {
+    Box, Drawer, Typography, Divider, Avatar, ButtonBase, Menu,
+    MenuItem,
+} from '@mui/material';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import Image from 'next/image';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import Link from "next/link";
-interface Session {
-    user?: {
-        name?: string;
-        email?: string;
-        image?: string;
-    };
-}
+import { useSession, signOut } from "next-auth/react";
 
-const Sidebar = ({ session }: { session: Session }) => {
-    console.log(session);
-    // const avatarSrc = session?.user?.image || '/avatar.png'; // Default avatar if not available
+const Sidebar = () => {
+    const { data: session } = useSession();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <Drawer
             variant="permanent"
@@ -46,90 +56,85 @@ const Sidebar = ({ session }: { session: Session }) => {
                     </Box>
                 </Box>
 
-                <Divider />
-
                 <Box display="flex" flexDirection="column" justifyContent="space-between" px={1} py={2}>
                     <Typography variant="caption" color="textSecondary" px={1}>Overview</Typography>
 
-                    <Box display="flex" flexDirection="column">
-                        <Link href="/dashboard">
-                            <ButtonBase
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-start',
-                                    gap: 1,
-                                    py: 1,
-                                    px: 1,
-                                    borderRadius: 1,
-                                    width: '100%',
-                                    '&:hover': {
-                                        backgroundColor: 'action.hover',
-                                    },
-                                }}
-                            >
-                                <DashboardOutlinedIcon fontSize="small" />
-                                <Typography variant="body2">Dashboard</Typography>
-                            </ButtonBase>
-                        </Link>
-                    </Box>
+                    <Link href="/dashboard"  >
+                        <ButtonBase
+                            sx={{
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                px: 2,
+                                py: 1,
+                                borderRadius: 2,
+                                gap: 1,
+                                '&:hover': { backgroundColor: '#f3f4f6' },
+                            }}
+                        >
+                            <DashboardOutlinedIcon sx={{ fontSize: 20 }} />
+                            <Typography variant="body2">Dashboard</Typography>
+                        </ButtonBase>
+                    </Link>
 
+                    <Link href="/dashboard/assets" >
+                        <ButtonBase
+                            sx={{
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                px: 2,
+                                py: 1,
+                                borderRadius: 2,
+                                gap: 1,
+                                '&:hover': { backgroundColor: '#f3f4f6' },
+                            }}
+                        >
+                            <FolderOutlinedIcon sx={{ fontSize: 20 }} />
+                            <Typography variant="body2">Assets</Typography>
+                        </ButtonBase>
+                    </Link>
 
-                    <Box display="flex" flexDirection="column">
-                        <Link href="/assets">
-                            <ButtonBase
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-start',
-                                    gap: 1,
-                                    py: 1,
-                                    px: 1,
-                                    borderRadius: 1,
-                                    width: '100%',
-                                    '&:hover': {
-                                        backgroundColor: 'action.hover',
-                                    },
-                                }}
-                            >
-                                <FolderOutlinedIcon fontSize="small" />
-                                <Typography variant="body2">Assets</Typography>
-                            </ButtonBase>
-                        </Link>
-                    </Box>
+                    <Link href="/dashboard/employee">
+                        <ButtonBase
+                            sx={{
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                px: 2,
+                                py: 1,
+                                borderRadius: 2,
+                                gap: 1,
+                                '&:hover': { backgroundColor: '#f3f4f6' },
+                            }}
+                        >
+                            <PeopleAltOutlinedIcon sx={{ fontSize: 20 }} />
+                            <Typography variant="body2">Employees</Typography>
+                        </ButtonBase>
+                    </Link>
 
-
-                    <Box display="flex" flexDirection="column">
-                        <Link href="/employee">
-                            <ButtonBase
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-start',
-                                    gap: 1,
-                                    py: 1,
-                                    px: 1,
-                                    borderRadius: 1,
-                                    width: '100%',
-                                    '&:hover': {
-                                        backgroundColor: 'action.hover',
-                                    },
-                                }}
-                            >
-                                <PeopleAltOutlinedIcon fontSize="small" />
-                                <Typography variant="body2">Employee</Typography>
-                            </ButtonBase>
-                        </Link>
-                    </Box>
-
+                    <Link href="/dashboard/setting/authorized" >
+                        <ButtonBase
+                            sx={{
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                px: 2,
+                                py: 1,
+                                borderRadius: 2,
+                                gap: 1,
+                                '&:hover': { backgroundColor: '#f3f4f6' },
+                            }}
+                        >
+                            <SettingsOutlinedIcon sx={{ fontSize: 20 }} />
+                            <Typography variant="body2">Settings</Typography>
+                        </ButtonBase>
+                    </Link>
                 </Box>
             </Box>
+
             {/* Bottom Profile Section */}
             <Box>
                 <Divider />
                 <Box p={1} display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center" gap={1}>
-                        <Avatar src={session?.user?.image} alt="xyz" sx={{ width: 32, height: 32 }} />
+                        <Avatar src={session?.user?.image || ''} alt="User" sx={{ width: 32, height: 32 }} />
                         <Box>
                             <Typography variant="body2" fontWeight="bold">
                                 {session?.user?.name || 'New User'}
@@ -139,14 +144,65 @@ const Sidebar = ({ session }: { session: Session }) => {
                             </Typography>
                         </Box>
                     </Box>
-
-                    <ExpandMore fontSize="small" />
+                    <Box sx={{ cursor: 'pointer' }} onClick={handleMenuOpen}>
+                        <ExpandMore fontSize="small" />
+                    </Box>
                 </Box>
+
+                {/* Popup Menu */}
+                <Menu
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    sx={{ mt: 1 }}
+                    slotProps={{
+                        paper: {
+                            elevation: 5,
+                            sx: {
+                                borderRadius: 2,
+                                width: 250,
+                                p: 0.5,
+                            },
+                        },
+                    }}
+                >
+                    {/* User Info */}
+                    <Box px={2} py={1} display="flex" alignItems="center" gap={1.5}>
+                        <Avatar src={session?.user?.image || ''} sx={{ width: 40, height: 40 }} />
+                        <Box>
+                            <Typography fontWeight={600} fontSize="0.9rem">
+                                {session?.user?.name || 'New User'}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                                {session?.user?.email || ''}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    <Divider sx={{ my: 0.5 }} />
+
+                    {/* Log Out */}
+                    <MenuItem
+                        onClick={() => {
+                            signOut();
+                            handleMenuClose();
+                        }}
+                        sx={{
+                            gap: 1,
+                            fontSize: '0.85rem',
+                            px: 2,
+                            py: 1.2,
+                        }}
+                    >
+                        <LogoutOutlinedIcon fontSize="small" />
+                        Log out
+                    </MenuItem>
+                </Menu>
             </Box>
         </Drawer>
     );
 };
 
 export default Sidebar;
-
-
