@@ -1,4 +1,3 @@
-// AssetStatusButton.tsx
 "use client";
 
 import {
@@ -8,17 +7,17 @@ import {
   Checkbox,
   ListItemText,
   Box,
-  FormControl,
   Input,
   InputAdornment,
   Divider,
 } from "@mui/material";
 import { useState } from "react";
-import { ArrowDropDown } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 interface AssetStatusButtonProps {
-  selectedAssetStatus: string[];
-  onAssetStatusSelect: (status: string[]) => void;
+  selectedAssetStatus: string;
+  onAssetStatusSelect: (status: string) => void;
 }
 
 const allAssetStatuses = ["Assigned", "Unassigned"];
@@ -39,11 +38,9 @@ const AssetStatusButton: React.FC<AssetStatusButtonProps> = ({
     setSearch(""); // Reset search
   };
 
-  const handleCheckboxChange = (status: string) => {
-    const updated = selectedAssetStatus.includes(status)
-      ? selectedAssetStatus.filter((s) => s !== status)
-      : [...selectedAssetStatus, status];
-    onAssetStatusSelect(updated); // Update the selected status
+  const handleStatusSelect = (status: string) => {
+    onAssetStatusSelect(status); // Set the selected status
+    // setAnchorEl(null); // Close the menu after selection
   };
 
   const filteredStatuses = allAssetStatuses.filter((status) =>
@@ -56,7 +53,7 @@ const AssetStatusButton: React.FC<AssetStatusButtonProps> = ({
         variant="outlined"
         size="small"
         onClick={handleClick}
-        startIcon={<ArrowDropDown />}
+        startIcon={<AddCircleOutlineOutlinedIcon />}
         sx={{
           border: "1px dashed rgba(169, 169, 169, 0.5)",
           textTransform: "none",
@@ -67,7 +64,7 @@ const AssetStatusButton: React.FC<AssetStatusButtonProps> = ({
           color: "black",
         }}
       >
-        {selectedAssetStatus.length > 0 ? selectedAssetStatus.join(", ") : "Asset Status"}
+        {selectedAssetStatus || "Asset Status"}
       </Button>
 
       <Menu
@@ -79,38 +76,36 @@ const AssetStatusButton: React.FC<AssetStatusButtonProps> = ({
       >
         {/* Custom Styled Search Box */}
         <Box display="flex" justifyContent="center">
-          <FormControl variant="standard" sx={{ width: 160 }}>
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search status"
-              disableUnderline
-              startAdornment={
-                <InputAdornment position="start">
-                  <ArrowDropDown fontSize="small" />
-                </InputAdornment>
-              }
-              sx={{
-                backgroundColor: "#ffffff",
-                borderRadius: "8px",
-                padding: "4px 8px",
-                fontSize: "0.8rem",
-              }}
-            />
-          </FormControl>
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search status"
+            disableUnderline
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            }
+            sx={{
+              backgroundColor: "#ffffff",
+              borderRadius: "8px",
+              padding: "4px 8px",
+              fontSize: "0.8rem",
+            }}
+          />
         </Box>
         <Divider />
 
-        {/* Status List */}
+        {/* Status List with Checkbox */}
         {filteredStatuses.map((status) => (
           <MenuItem
             key={status}
-            onClick={() => handleCheckboxChange(status)}
+            onClick={() => handleStatusSelect(status)}
             dense
             sx={{ fontSize: "0.75rem" }}
           >
             <Checkbox
-              checked={selectedAssetStatus.includes(status)}
+              checked={selectedAssetStatus === status}
               size="small"
               sx={{ padding: 0.5, marginRight: 1 }}
             />

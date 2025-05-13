@@ -47,7 +47,8 @@ export const DELETE = auth(async function DELETE(req, { params }) {
              UPDATE public.employee 
                 SET archived_at = now(),
  	            archived_by=$1,
-                archive_reason = $2
+                archive_reason = $2,
+                status = 'deleted'
                 WHERE id = $3 RETURNING *
             `, [req.auth.user?.id, reason, id])
         return NextResponse.json({ message: 'Employee archived successfully' });

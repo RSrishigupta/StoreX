@@ -11,17 +11,22 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+
+
 import Link from "next/link";
+import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 import AddEmployeeDrawer from "@/Component/emloyeeComponents/addemployee";
 import TypeButton from "@/Component/emloyeeComponents/typebutton";
 import StatusButton from "@/Component/emloyeeComponents/statusButton"; // Import the new StatusButton
-import AssetStatus from "@/Component/emloyeeComponents/assetStatus";
+import AssetStatusButton from "@/Component/emloyeeComponents/assetStatus";
+import EmployeeData from "@/Component/emloyeeComponents/employeeData";
 
 export default function Employee() {
   const [open, setOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedAssetStatus, setSelectedAssetStatus] = useState<string>("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -34,6 +39,12 @@ export default function Employee() {
       Employee
     </Typography>,
   ];
+  //create a reset button along with the asset status button and type button that only show when their is a value selected in the type button and asset status button and status button that clears the selected values
+  const handleReset = () => {
+    setSelectedTypes([]);
+    setSelectedStatus("");
+    setSelectedAssetStatus("");
+  };
 
   return (
     <Box>
@@ -62,9 +73,10 @@ export default function Employee() {
           <TextField
             placeholder="Search employee"
             size="small"
+            variant="outlined"
             sx={{
-              minWidth: 200,
-              height: "32px",
+              minWidth: 400,
+              height: "36px",
               "& .MuiInputBase-root": {
                 height: "100%",
                 fontSize: "0.85rem",
@@ -77,31 +89,38 @@ export default function Employee() {
 
           {/* type Buttons */}
           <TypeButton selectedTypes={selectedTypes} onTypeSelect={setSelectedTypes} />
-
           {/* Status Button */}
           <StatusButton selectedStatus={selectedStatus} onStatusSelect={setSelectedStatus} />
-
           {/* Asset Status Button */}
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            size="small"
-            sx={{
-              border: "1px dashed rgba(169, 169, 169, 0.5)",
-              textTransform: "none",
-              padding: "2px 6px",
-              minHeight: "32px",
-              lineHeight: 1,
-              fontSize: "0.75rem",
-              color: "black",
-            }}
-          >
-            Asset Status
-          </Button>
+          <AssetStatusButton selectedAssetStatus={selectedAssetStatus} onAssetStatusSelect={setSelectedAssetStatus} />
+          {/* Reset Button */}
+          {/* Show reset button only if any filter is selected */}
 
+          {(selectedTypes.length > 0 || selectedStatus || selectedAssetStatus) && (
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              endIcon={<CloseIcon />}
+              onClick={handleReset}
+              sx={{
+                textTransform: "none",
+                fontSize: "0.85rem",
+                padding: "6px 12px",
+                whiteSpace: "nowrap",
+                border: "1px rgba(169, 169, 169, 0.5)",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 0, 0, 0.1)",
+                },
+              }}
+            >
+              Reset
+            </Button>
+          )}
         </Box>
 
         {/* Right: Add Employee */}
+
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -120,14 +139,12 @@ export default function Employee() {
       </Box>
 
       {/* Placeholder for employee table */}
-      <Box style={{ overflowY: "auto", maxHeight: "100vh" }} className="px-5 py-5">
-        <Typography variant="body2" color="text.secondary">
-          (Employee table will be placed here)
-        </Typography>
+      <Box style={{ overflowY: 'auto', maxHeight: '80vh' }}>
+      <EmployeeData/>
       </Box>
 
       {/* Add Employee Drawer */}
       <AddEmployeeDrawer open={open} onClose={handleClose} />
-    </Box>
+    </Box >
   );
 }

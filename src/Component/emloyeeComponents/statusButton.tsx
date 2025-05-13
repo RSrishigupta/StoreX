@@ -7,7 +7,6 @@ import {
   Checkbox,
   ListItemText,
   Box,
-  FormControl,
   Input,
   InputAdornment,
   Divider,
@@ -16,8 +15,8 @@ import { useState } from "react";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 interface StatusButtonProps {
-  selectedStatus: string[];
-  onStatusSelect: (status: string[]) => void;
+  selectedStatus: string;
+  onStatusSelect: (status: string) => void;
 }
 
 const allStatuses = ["Active", "Deleted", "Not an Employee"];
@@ -36,10 +35,8 @@ const StatusButton: React.FC<StatusButtonProps> = ({ selectedStatus, onStatusSel
   };
 
   const handleCheckboxChange = (status: string) => {
-    const updated = selectedStatus.includes(status)
-      ? selectedStatus.filter((s) => s !== status)
-      : [...selectedStatus, status];
-    onStatusSelect(updated); // Update the status selection
+    onStatusSelect(status); // Update the selected status
+    // setAnchorEl(null); // Close the menu after selection
   };
 
   const filteredStatuses = allStatuses.filter((status) =>
@@ -63,7 +60,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ selectedStatus, onStatusSel
           color: "black",
         }}
       >
-        {selectedStatus.length > 0 ? selectedStatus.join(", ") : "Status"}
+        {selectedStatus || "Status"}
       </Button>
 
       <Menu
@@ -75,31 +72,27 @@ const StatusButton: React.FC<StatusButtonProps> = ({ selectedStatus, onStatusSel
       >
         {/* Custom Styled Search Box */}
         <Box display="flex" justifyContent="center">
-          <FormControl variant="standard" sx={{
-            width: 160,
-          }}>
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search status"
-              disableUnderline
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              }
-              sx={{
-                backgroundColor: "#ffffff",
-                borderRadius: "8px",
-                padding: "4px 8px",
-                fontSize: "0.8rem",
-              }}
-            />
-          </FormControl>
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search status"
+            disableUnderline
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            }
+            sx={{
+              backgroundColor: "#ffffff",
+              borderRadius: "8px",
+              padding: "4px 8px",
+              fontSize: "0.8rem",
+            }}
+          />
         </Box>
         <Divider />
 
-        {/* Status List */}
+        {/* Status List with Checkbox */}
         {filteredStatuses.map((status) => (
           <MenuItem
             key={status}
@@ -108,7 +101,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ selectedStatus, onStatusSel
             sx={{ fontSize: "0.75rem" }}
           >
             <Checkbox
-              checked={selectedStatus.includes(status)}
+              checked={selectedStatus === status}
               size="small"
               sx={{ padding: 0.5, marginRight: 1 }}
             />

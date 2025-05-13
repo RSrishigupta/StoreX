@@ -57,18 +57,18 @@ const AdminPage = () => {
         </Button>
 
         <TableContainer component={Paper}>
-          <Table>
+          <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ py: 1 }}>Email</TableCell>
-                <TableCell sx={{ py: 1 }}>Action</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data?.map((admin: { id: string; email: string }) => (
                 <TableRow key={admin.id}>
-                  <TableCell sx={{ py: 1 }}>{admin.email}</TableCell>
-                  <TableCell sx={{ py: 1 }}>
+                  <TableCell>{admin.email}</TableCell>
+                  <TableCell>
                     <DeleteAdminButton id={admin.id} email={admin.email} onSuccess={refetch} />
                   </TableCell>
                 </TableRow>

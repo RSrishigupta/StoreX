@@ -80,19 +80,19 @@ export default function DashboardPage() {
 
         {/* Table */}
         <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
-          <TableContainer component={Paper} elevation={0} sx={{ width: '90%' }}>
-            <Table>
+          <TableContainer component={Paper} elevation={0}>
+            <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600, p: 1 }}>Asset Name</TableCell>
-                  <TableCell sx={{ fontWeight: 600, p: 1 }}>Asset Quantity</TableCell>
+                  <TableCell sx={{ fontWeight: 600,}}>Asset Name</TableCell>
+                  <TableCell sx={{ fontWeight: 600, }}>Asset Quantity</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {Object.entries(assetData).map(([type, count]) => (
                   <TableRow key={type}>
-                    <TableCell sx={{ p: 1 }}>{type}</TableCell>
-                    <TableCell sx={{ p: 1 }}>{count as number}</TableCell>
+                    <TableCell>{type}</TableCell>
+                    <TableCell>{count as number}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
