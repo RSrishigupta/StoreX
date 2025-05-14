@@ -21,14 +21,14 @@ export const PATCH = auth(async function PATCH(req, { params }) {
         console.log("reason", reason);
         console.log("id", id);
         await pool.query(
-            `UPDATE public.assets SET status = 'available' 
+            `UPDATE public.assets SET status = 'Available' 
                 WHERE asset_type_id = (select asset_id from assigned_assets where id = $1)`, [id]);
         const result = await pool.query(
             `UPDATE PUBLIC.ASSIGNED_ASSETS
                 SET
                     RETRIVE_DATE = $1,
                     RETRIVE_REASON = $2,
-                    RETRIVE_BY = $3+
+                    RETRIVE_BY = $3
                 WHERE
                     ID = $4
                 RETURNING *`,

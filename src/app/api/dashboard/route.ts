@@ -18,7 +18,7 @@ export const GET = auth(async function GET(req) {
     `;
     const values: string[] = [];
 
-    if (status === 'available' || status === 'assign') {
+    if (status === 'Available' || status === 'Assign') {
       query += ` WHERE status = $1`;
       values.push(status);
     }
@@ -51,10 +51,10 @@ export const GET = auth(async function GET(req) {
 
     // Get assigned and available totals
     const assignedResult = await pool.query(
-      `SELECT COUNT(*) FROM assets WHERE status = 'assign'`
+      `SELECT COUNT(*) FROM assets WHERE status = 'Assign'`
     );
     const availableResult = await pool.query(
-      `SELECT COUNT(*) FROM assets WHERE status = 'available'`
+      `SELECT COUNT(*) FROM assets WHERE status = 'Available'`
     );
 
     const TotalAssigned = parseInt(assignedResult.rows[0].count, 10);

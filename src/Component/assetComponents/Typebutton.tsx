@@ -22,18 +22,19 @@ interface TypeButtonProps {
   onTypeSelect: (types: string[]) => void;
 }
 
-const allTypes = ["Employee", "Intern", "Freelancer"];
+const allTypes = ["laptop", "mouse", "monitor", "accessories", "mobile", "sim", "harddrive","pendrive"];
 
 const TypeButton: React.FC<TypeButtonProps> = ({ selectedTypes, onTypeSelect }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [search, setSearch] = useState("");
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSearch(""); // Reset search
+    setSearch(""); 
   };
 
   const handleCheckboxChange = (type: string) => {
@@ -74,7 +75,6 @@ const TypeButton: React.FC<TypeButtonProps> = ({ selectedTypes, onTypeSelect }) 
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
-        {/* Custom Styled Search Box */}
         <Box display="flex" justifyContent="center">
           <FormControl variant="standard" sx={{
             width: 160,
@@ -103,7 +103,6 @@ const TypeButton: React.FC<TypeButtonProps> = ({ selectedTypes, onTypeSelect }) 
         </Box>
         <Divider/>
 
-        {/* Type List */}
         {filteredTypes.map((type) => (
           <MenuItem
             key={type}

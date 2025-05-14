@@ -21,9 +21,9 @@ export const POST = auth(async function POST(req) {
   const {
     brand, purchaseDate, warrantyDate, ownedBy, type, model, serialNo,
     series, ram, operatingSystem, screenResolution, storage,
-    phone, simNo, osType, imei1, imei2, accesoriesType, capacity, remark
+    phone, simNo, osType, imei1, imei2, accessoriesType, capacity, remark
   } = body;
-
+  console.log("data in the route.ts file", accessoriesType, capacity, remark);
   if (!brand || !type || !purchaseDate || !warrantyDate || !ownedBy) {
     return NextResponse.json({ error: "INSUFFICIENT DATA" }, { status: 400 });
   }
@@ -56,7 +56,9 @@ export const POST = auth(async function POST(req) {
         await insertMobile(assetId, { osType, imei1, imei2, ram });
         break;
       case "accessories":
-        await insertAccessories(assetId, { accesoriesType, capacity, remark });
+        await insertAccessories(assetId, { accessoriesType, capacity, remark });
+        break;
+      default:
         break;
     }
 
@@ -70,7 +72,6 @@ export const GET = auth(async function GET(req) {
   if (!req.auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
   try {
     const result = await pool.query(`
     SELECT
@@ -102,76 +103,77 @@ export const GET = auth(async function GET(req) {
       LEFT JOIN MOBILE MO ON A.ASSET_TYPE_ID = MO.ID
       LEFT JOIN SIM S ON A.ASSET_TYPE_ID = S.ID
       LEFT JOIN ACCESSORIES ACC ON A.ASSET_TYPE_ID = ACC.ID
+      order by A.CREATE_AT DESC
 
     `);
-    console.log(result.rows);
+    // console.log(result.rows);
 
     const formattedAssets = result.rows.map((row) => {
-        const base = {
-          id: row.id,
-          brand: row.brand,
-          model: row.model,
-          serial_no: row.serial_no,
-          type: row.type,
-          status: row.status,
-          purchased_date: row.purchased_date,
-          warranty_expiry_date: row.warranty_expiry_date,
-          created_by: row.created_by,
-          archived_by: row.archived_by,
-          archive_reason: row.archive_reason,
-          created_at: row.created_at,
-          updated_at: row.updated_at,
-          archived_at: row.archived_at,
-          owned_by: row.owned_by,
-        };
+      const base = {
+        id: row.asset_type_id,
+        brand: row.brand,
+        model: row.model,
+        serial_no: row.serial_no,
+        type: row.type,
+        status: row.status,
+        purchase_date: row.purchase_date,
+        warranty_expire_date: row.warranty_expire_date,
+        created_by: row.created_by,
+        archived_by: row.archived_by,
+        archive_reason: row.archive_reason,
+        create_at: row.create_at,
+        updated_at: row.updated_at,
+        archived_at: row.archived_at,
+        owned_by: row.owned_by,
+      };
 
-        let specs = null;
+      let specs = null;
 
-        switch (row.type) {
-          case 'laptop':
-            specs = {
-              series: row.series,
-              processor: row.processor,
-              ram: row.laptop_ram,
-              storage: row.laptop_storage,
-              os: row.laptop_os,
-              screen_resolution: row.screen_resolution,
-              charger: row.charger,
-            };
-            break;
-          case 'pendrive':
-            specs = { storage: row.pendrive_storage };
-            break;
-          case 'harddrive':
-            specs = { storage: row.harddisk_storage };
-            break;
-          case 'monitor':
-            specs = { screen_resolution: row.monitor_resolution };
-            break;
-          case 'mobile':
-            specs = {
-              os_type: row.os_type,
-              imei_1: row.imei_1,
-              imei_2: row.imei_2,
-              ram: row.mobile_ram,
-            };
-            break;
-          case 'sim':
-            specs = {
-              sim_no: row.sim_no,
-              phone_no: row.phone_no,
-            };
-            break;
-          case 'accessories':
-            specs = {
-              acc_type: row.acc_type,
-              remark: row.remark,
-              capacity: row.capacity,
-            };
-            break;
-        }
+      switch (row.type) {
+        case 'laptop':
+          specs = {
+            series: row.series,
+            processor: row.processor,
+            ram: row.laptop_ram,
+            storage: row.laptop_storage,
+            os: row.laptop_os,
+            screen_resolution: row.screen_resolution,
+            charger: row.charger,
+          };
+          break;
+        case 'pendrive':
+          specs = { storage: row.pendrive_storage };
+          break;
+        case 'harddrive':
+          specs = { storage: row.harddisk_storage };
+          break;
+        case 'monitor':
+          specs = { screen_resolution: row.monitor_resolution };
+          break;
+        case 'mobile':
+          specs = {
+            os_type: row.os_type,
+            imei_1: row.imei_1,
+            imei_2: row.imei_2,
+            ram: row.mobile_ram,
+          };
+          break;
+        case 'sim':
+          specs = {
+            sim_no: row.sim_no,
+            phone_no: row.phone_no,
+          };
+          break;
+        case 'accessories':
+          specs = {
+            acc_type: row.acc_type,
+            remark: row.remark,
+            capacity: row.capacity,
+          };
+          break;
+      }
 
-    return { ...base, specifications: specs };
+      return { ...base, specifications: specs };
     });
     return NextResponse.json({ assets: formattedAssets }, { status: 200 });
 

@@ -1,0 +1,297 @@
+{form.assetType === 'laptop' && (
+                        <>
+                            <Typography>Series</Typography>
+                            <TextField
+                                placeholder="Enter Series"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.series}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, series: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>Processor</Typography>
+                            <TextField
+                                placeholder="Enter Processor (e.g. i5, Ryzen 7)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.processor}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, processor: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>RAM</Typography>
+                            <TextField
+                                placeholder="Enter RAM (e.g. 16GB)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.ram}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, ram: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>Storage</Typography>
+                            <TextField
+                                placeholder="Enter Storage (e.g. 512GB SSD)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.storage}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, storage: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>Operating System</Typography>
+                            <TextField
+                                placeholder="Enter OS (e.g. Windows 11, Ubuntu)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.operatingSystem}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, operatingSystem: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>Screen Resolution</Typography>
+                            <TextField
+                                placeholder="Enter Screen Resolution (e.g. 1920x1080)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.screenResolution}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, screenResolution: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>Charger</Typography>
+                            <RadioGroup
+                                row
+                                value={form.specifications.charger}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, charger: e.target.value },
+                                    }))
+                                }
+                            >
+                                <FormControlLabel value="true" control={<Radio />} label="Yes" />
+                                <FormControlLabel value="false" control={<Radio />} label="No" />
+                            </RadioGroup>
+                        </>
+                    )}
+                    {form.assetType === 'monitor' && (
+                        <>
+                            <Typography>Screen Resolution</Typography>
+                            <TextField
+                                placeholder="Enter Screen Resolution (e.g. 1920x1080)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.screenResolution}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, screenResolution: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}  
+                    {form.assetType === 'harddrive' && (
+                        <>
+                            <Typography>Storage</Typography>
+                            <TextField
+                                placeholder="Enter Storage (e.g. 512GB SSD)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.storage}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, storage: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+
+                    {form.assetType === 'pendrive' && (
+                        <>
+                            <Typography>Storage</Typography>
+                            <TextField
+                                placeholder="Enter Storage (e.g. 512GB SSD)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.storage}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, storage: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+                    {form.assetType === 'mobile' && (
+                        <>
+                            <Typography>OS Type</Typography>
+                            <TextField
+                                placeholder="Enter OS Type (e.g. Android, iOS)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.osType}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, osType: e.target.value },
+                                    }))
+                                }
+                            />
+                            <Typography>RAM</Typography>
+                            <TextField
+                                placeholder="Enter RAM (e.g. 8GB)"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.ram}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, ram: e.target.value },
+                                    }))
+                                }
+                            />
+                            <Typography>IMEI 1</Typography>
+                            <TextField
+                                placeholder="Enter IMEI 1"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.imei1}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, imei1: e.target.value },
+                                    }))
+                                }
+                            />
+
+                            <Typography>IMEI 2</Typography>
+                            <TextField
+                                placeholder="Enter IMEI 2"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.imei2}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, imei2: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+                    {form.assetType === 'sim' && (
+                        <>
+                            <Typography>Phone</Typography>
+                            <TextField
+                                placeholder="Enter Phone"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.phone}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, phone: e.target.value },
+                                    }))
+                                }
+                            />
+                            <Typography>Sim No.</Typography>
+                            <TextField
+                                placeholder="Enter Sim No."
+                                fullWidth
+                                size="small"
+                                value={form.specifications.simNo}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, simNo: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+
+                    {form.assetType === 'accessories' && (
+                        <>
+                            <Typography>Type</Typography>
+                            <RadioGroup
+                                row
+                                value={form.specifications.accessoriesType}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, accessoriesType: e.target.value },
+                                    }))
+                                }
+                            >
+                                <FormControlLabel value="cable" control={<Radio />} label="Cable" />
+                                <FormControlLabel value="ram" control={<Radio />} label="Ram" />
+                                <FormControlLabel value="keyboard" control={<Radio />} label="Keyboard" />
+                                <FormControlLabel value="other" control={<Radio />} label="Other" />
+                            </RadioGroup>
+
+                            {/* <Box>
+                                {form.specifications.accessoriesType}
+                            </Box> */}
+
+                            {form.specifications.accessoriesType === 'ram' && (
+                                <>
+                                    <Typography>Capacity</Typography>
+                                    <TextField
+                                        placeholder="Enter Capacity"
+                                        fullWidth
+                                        size="small"
+                                        value={form.specifications.capacity}
+                                        onChange={(e) => setForm((prev) => ({
+                                            ...prev,
+                                            specifications: { ...prev.specifications, capacity: e.target.value },
+                                        }))
+                                        }
+                                    />
+                                </>
+
+                            )}
+                            <Typography>Remark</Typography>
+                            <TextField
+                                placeholder="Remark"
+                                fullWidth
+                                size="small"
+                                value={form.specifications.remark}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        specifications: { ...prev.specifications, remark: e.target.value },
+                                    }))
+                                }
+                            />
+                        </>
+                    )}

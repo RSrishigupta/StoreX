@@ -17,7 +17,8 @@ export const PATCH = auth(async function PATCH(req, { params }) {
              UPDATE public.assets 
                 SET archived_at = NULL,
  	            archived_by=NULL,
-                archive_reason = NULL
+                archive_reason = NULL,
+                status = 'Available'
                 WHERE asset_type_id = $1 
 				RETURNING *
             `, [id])

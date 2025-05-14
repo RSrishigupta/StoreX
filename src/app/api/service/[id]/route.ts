@@ -22,7 +22,7 @@ export const PATCH = auth(async function PATCH(req, { params }) {
         console.log("receivedRemark", receivedRemark);
         console.log("id", id);
         await pool.query(
-            `UPDATE public.assets SET status = 'available' 
+            `UPDATE public.assets SET status = 'Available' 
                 WHERE asset_type_id = (select asset_id from service where id = $1)`, [id]);
         const result = await pool.query(
             `UPDATE PUBLIC.service

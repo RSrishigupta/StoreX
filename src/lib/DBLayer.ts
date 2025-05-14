@@ -73,7 +73,7 @@ export async function insertAsset(data: {
   createdBy: string|undefined;
 }) {
   const {
-    brand, model, serialNo, type, status = "available",
+    brand, model, serialNo, type, status = "Available",
     purchaseDate, warrantyDate, ownedBy, createdBy
   } = data;
 
@@ -142,12 +142,14 @@ export async function insertMobile(assetId: string, data: {
 }
 
 export async function insertAccessories(assetId: string, data: {
-  accesoriesType: string;
+  accessoriesType: string;
   capacity: string;
   remark: string;
 }) {
+  const finalCapacity = data.capacity||null
   await pool.query(
+
     `INSERT INTO public.accessories (id, accessories_type, capacity, remark) VALUES ($1, $2, $3, $4);`,
-    [assetId, data.accesoriesType, data.capacity, data.remark]
+    [assetId, data.accessoriesType, finalCapacity, data.remark]
   );
 }

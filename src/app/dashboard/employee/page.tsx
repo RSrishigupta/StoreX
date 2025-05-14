@@ -1,4 +1,3 @@
-// Employee.tsx
 "use client";
 
 import {
@@ -10,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 
 import Link from "next/link";
@@ -18,7 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 import AddEmployeeDrawer from "@/Component/emloyeeComponents/addemployee";
 import TypeButton from "@/Component/emloyeeComponents/typebutton";
-import StatusButton from "@/Component/emloyeeComponents/statusButton"; // Import the new StatusButton
+import StatusButton from "@/Component/emloyeeComponents/statusButton";
 import AssetStatusButton from "@/Component/emloyeeComponents/assetStatus";
 import EmployeeData from "@/Component/emloyeeComponents/employeeData";
 
@@ -27,6 +26,11 @@ export default function Employee() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [selectedAssetStatus, setSelectedAssetStatus] = useState<string>("");
+  // console.log("Selected Types:", selectedTypes);
+  // console.log("Selected Status:", selectedStatus);
+  // console.log("Selected Asset Status:", selectedAssetStatus);
+  const [searchQuery, setSearchQuery] = useState('');
+
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,7 +52,6 @@ export default function Employee() {
 
   return (
     <Box>
-      {/* Header */}
       <Box className="py-5 px-5 flex justify-between items-center">
         <Stack spacing={2}>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
@@ -59,7 +62,6 @@ export default function Employee() {
 
       <Divider />
 
-      {/* Top Controls: Search, Filters, Add */}
       <Box
         className="px-5 py-4"
         display="flex"
@@ -68,12 +70,13 @@ export default function Employee() {
         gap={2}
         flexWrap="wrap"
       >
-        {/* Left: Search and Filters */}
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap" flex={1}>
           <TextField
             placeholder="Search employee"
             size="small"
             variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             sx={{
               minWidth: 400,
               height: "36px",
@@ -87,14 +90,10 @@ export default function Employee() {
             }}
           />
 
-          {/* type Buttons */}
+
           <TypeButton selectedTypes={selectedTypes} onTypeSelect={setSelectedTypes} />
-          {/* Status Button */}
           <StatusButton selectedStatus={selectedStatus} onStatusSelect={setSelectedStatus} />
-          {/* Asset Status Button */}
           <AssetStatusButton selectedAssetStatus={selectedAssetStatus} onAssetStatusSelect={setSelectedAssetStatus} />
-          {/* Reset Button */}
-          {/* Show reset button only if any filter is selected */}
 
           {(selectedTypes.length > 0 || selectedStatus || selectedAssetStatus) && (
             <Button
@@ -119,11 +118,10 @@ export default function Employee() {
           )}
         </Box>
 
-        {/* Right: Add Employee */}
 
         <Button
           variant="contained"
-          startIcon={<AddIcon />}
+          startIcon={<AddCircleOutlineOutlinedIcon />}
           sx={{
             backgroundColor: "#0f172a",
             textTransform: "none",
@@ -138,13 +136,19 @@ export default function Employee() {
         </Button>
       </Box>
 
-      {/* Placeholder for employee table */}
       <Box style={{ overflowY: 'auto', maxHeight: '80vh' }}>
-      <EmployeeData/>
+        <EmployeeData
+          selectedTypes={selectedTypes}
+          selectedStatus={selectedStatus}
+          selectedAssetStatus={selectedAssetStatus}
+          searchQuery={searchQuery}
+        />
+
       </Box>
 
-      {/* Add Employee Drawer */}
       <AddEmployeeDrawer open={open} onClose={handleClose} />
     </Box >
   );
 }
+
+

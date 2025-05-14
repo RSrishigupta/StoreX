@@ -16,7 +16,8 @@ export const DELETE = auth(async function DELETE(req, { params }) {
              UPDATE public.assets 
                 SET archived_at = now(),
  	            archived_by=$1,
-                archive_reason = $2
+                archive_reason = $2,
+                status = 'Deleted'
                 WHERE asset_type_id = $3 RETURNING *
             `, [req.auth.user?.id, reason, id])
         return NextResponse.json({ message: 'ASSETS archived successfully' });

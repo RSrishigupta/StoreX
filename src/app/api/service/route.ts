@@ -16,13 +16,13 @@ export const POST = auth(async function POST(req) {
     try {
         //pahle se assigned to nhi hai asset
         const checkAssigned = await pool.query(
-            `select count(*)> 0 as exist from assets where asset_type_id = $1 and status = 'assign'`, [assetId])
+            `select count(*)> 0 as exist from assets where asset_type_id = $1 and status = 'Assign'`, [assetId])
         if (checkAssigned.rows[0].exist) {
             return NextResponse.json({ error: 'Asset is already assigned' }, { status: 400 });
         }
         //servive me jane ke baad asset ki status change ho jani chahiye
         await pool.query(
-            `UPDATE public.assets SET status = 'service' WHERE asset_type_id = $1`, [assetId]);
+            `UPDATE public.assets SET status = 'Service' WHERE asset_type_id = $1`, [assetId]);
 
         const result = await pool.query(
             `INSERT INTO public.service (asset_id, sent_by, sent_date, reason)

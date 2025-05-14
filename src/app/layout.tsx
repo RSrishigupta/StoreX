@@ -3,7 +3,9 @@
 import { useState } from "react";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react"; 
+import { SessionProvider } from "next-auth/react";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function RootLayout({
   children,
@@ -17,7 +19,9 @@ export default function RootLayout({
       <body>
         <SessionProvider>
           <QueryClientProvider client={queryClient}>
-            {children}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {children}
+            </LocalizationProvider>
           </QueryClientProvider>
         </SessionProvider>
       </body>
